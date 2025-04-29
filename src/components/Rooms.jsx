@@ -36,7 +36,7 @@ const Rooms = () => {
                 <span>${price} / Night</span>
                 <Link
                   to={`/rooms/${id}`}
-                  className="bg-blue-500 text-white rounded-md p-2 text-center"
+                  className="bg-amber-600 text-white rounded-md p-2 text-center"
                 >
                   View Details
                 </Link>
@@ -51,6 +51,12 @@ const Rooms = () => {
           </p>
         </div>
       )}
+      <div className="flex justify-center items-center mb-4 ">
+        {" "}
+        <Link to="/" className="bg-gray-500 p-2 rounded-full text-white">
+          Return HomePage
+        </Link>
+      </div>
     </div>
   );
 };

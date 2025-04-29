@@ -1,11 +1,10 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useContext, useState } from "react";
 import { ApiContext } from "../App";
 
 const RoomDetails = () => {
   const { id } = useParams();
   const { rooms, customerInfo, setCustomerInfo } = useContext(ApiContext);
-  const infoRef = useRef();
   const room = rooms.find((room) => room.id === parseInt(id));
   const [entryDate, setEntryDate] = useState("");
   const [quitDate, setQuitDate] = useState("");
@@ -20,6 +19,22 @@ const RoomDetails = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!customerName.trim()) {
+      alert("Lütfen adınızı ve soyadınızı giriniz");
+      return;
+    }
+
+    if (!entryDate || !quitDate) {
+      alert("Lütfen giriş ve çıkış tarihlerini giriniz.");
+      return;
+    }
+
+    if (new Date(quitDate) <= new Date(entryDate)) {
+      alert("Çıkış tarihi giriş tarihinden sonra olmalıdır.");
+      return;
+    }
+
     const time = calculateDateDifference(entryDate, quitDate);
     const price = time * room.price;
     setCustomerInfo({
@@ -70,6 +85,7 @@ const RoomDetails = () => {
             type="date"
             onChange={(e) => setEntryDate(e.target.value)}
             value={entryDate}
+            min={new Date().toLocaleDateString("en-CA")}
           />
         </div>
 
@@ -80,6 +96,7 @@ const RoomDetails = () => {
             type="date"
             onChange={(e) => setQuitDate(e.target.value)}
             value={quitDate}
+            min={entryDate}
           />
         </div>
         <button className="bg-amber-50 p-2 cursor-pointer" type="submit">
@@ -87,12 +104,18 @@ const RoomDetails = () => {
         </button>
       </form>
 
-      <div className="bg-amber-50 w-full flex flex-col items-center space-y-3 p-5">
+      <div className="bg-gray-200 w-full flex flex-col items-center space-y-3 p-5">
         <h3 className="font-bold ">Tatil Detayı</h3>
         <p>Ad Soyad : {customerInfo.name}</p>
         <p>Giriş Tarihi : {customerInfo.entry}</p>
         <p>Çıkış Tarihi : {customerInfo.quit}</p>
         <p>Toplam Ücret : ${customerInfo.price}</p>
+      </div>
+      <div className="flex justify-center items-center py-4 bg-amber-400 w-full  ">
+        {" "}
+        <Link to="/" className="bg-gray-500 p-2 rounded-full text-white">
+          Return HomePage
+        </Link>
       </div>
     </div>
   );
